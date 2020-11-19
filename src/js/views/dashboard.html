@@ -1,0 +1,131 @@
+<!--
+ Copyright (c) 2014, 2020, Oracle and/or its affiliates.
+ The Universal Permissive License (UPL), Version 1.0
+ -->
+<STYLE TYPE="text/css">
+
+</STYLE>
+
+<SCRIPT>      
+    
+</SCRIPT>
+
+<div id="circle"></div>
+<div class="oj-hybrid-padding" id="form-container">
+  <h1>Tests</h1>
+  <div class="oj-flex">
+      <div class="oj-panel-alt1 oj-sm-12 oj-md-4 oj-lg-3 oj-flex-item oj-sm-padding-2x-horizonta">
+            <div class="oj-panel oj-margin oj-flex-item">
+                <oj-combobox-one id="combobox1" value="{{value1}}" style="max-width: 22em;">
+                    <oj-option value="IE">Internet Explorer</oj-option>
+                    <oj-option value="FF">Firefox</oj-option>
+                    <oj-option value="CH">Chrome</oj-option>
+                    <oj-option value="OP">Opera</oj-option>
+                    <oj-option value="SA">Safari</oj-option>
+                </oj-combobox-one>
+            </div>
+            <div class="oj-panel oj-margin oj-flex-item">
+            <h5>BackTests</h5>
+            <div id='buttons-container2'>
+                <oj-combobox-one id="combobox1" value="{{selectedTimeFrame}}" style="max-width: 22em;">
+                  <oj-bind-for-each data="[[timeFrames]]">
+                      <template>
+                          <oj-option value="[[$current.data.id]]">
+                              <span>
+                                  <oj-bind-text value="[[$current.data.name]]"></oj-bind-text>
+                              </span>              
+                          </oj-option>
+                      </template>
+                  </oj-bind-for-each>
+                </oj-combobox-one>
+            </div>
+            <div id='buttons-container' style="text-align: right">
+                <oj-button display='icons'>
+                    <span slot='startIcon' class="oj-fwk-icon oj-fwk-icon-plus"></span>
+                    Nuevo
+                </oj-button>
+                <oj-button display='icons'>
+                    <span slot='startIcon' class="oj-fwk-icon oj-fwk-icon-warning"></span>
+                    Eliminar
+                </oj-button>
+            </div>
+            <!-- Ticket List -->
+            <div id='listviewWrapper' class="list-view-container">
+                <oj-paging-control id="paging" data="[[backTestListDataSource]]" page-size="4">
+                </oj-paging-control>
+                <oj-list-view id='listview'
+                aria-label="listview with paging control"                               
+                class='oj-sm-12'
+                data='[[backTestListDataSource]]'
+                selection-mode='single' selection="{{selectedBackTest}}"
+                on-selection-changed="[[listSelectionChanged]]"
+                selection-required='true'
+                item.renderer="[[oj.KnockoutTemplateUtils.getRenderer('ticket-list-template', true)]]">
+                </oj-list-view>
+                <script type="text/html" id="ticket-list-template">
+                    <li data-bind="attr: {id: $data['id']}">
+                      <!--div class="oj-flex">
+                        <div class="oj-sm-12">
+                          <strong>BackTest ID:</strong>	
+                          <oj-bind-text value="[[id]]"></oj-bind-text>
+                        </div>
+                      </div-->
+                      <div class="oj-flex oj-sm-padding-2x-top oj-sm-padding-2x-bottom">
+                        <oj-bind-text value="[[name]]"></oj-bind-text>
+                      </div>
+                    </li>
+                </script>
+            </div>            
+          </div>            
+            <div class="oj-panel-alt3 oj-panel oj-margin oj-flex-item">      
+                <h5>ForwardTests</h5>
+                <div id='buttons-container' style="text-align: right">
+                    <oj-button display='icons'>
+                        <span slot='startIcon' class="oj-fwk-icon oj-fwk-icon-plus"></span>
+                        Nuevo
+                    </oj-button>
+                    <oj-button display='icons'>
+                        <span slot='startIcon' class="oj-fwk-icon oj-fwk-icon-warning"></span>
+                        Eliminar
+                    </oj-button>
+                </div>
+                <oj-navigation-list  aria-label="Choose a navigation item" drill-mode="none" selection="home5" >
+                <ul >
+                  <li id="home5">
+                    <a href="#">
+                      Home
+                    </a>
+                  </li>
+                  <li id="gettingstarted5">
+                    <a href="#">
+                      Getting Started
+                    </a>
+                  </li>
+                  <li id="cookbook5">
+                    <a href="#">
+                      Cookbook
+                    </a>
+                  </li>
+                  <li id="stylelab5" class="oj-disabled">
+                    <a href="#">
+                      Style Lab
+                    </a>
+                  </li>
+                  <li id="library5" >
+                    <a href="#" >
+                      Library
+                    </a>
+                  </li>
+                </ul>
+              </oj-navigation-list>
+          </div>
+      </div>
+      <div class="oj-panel-alt1 oj-sm-12 oj-md-8 oj-lg-9 oj-flex-item oj-sm-padding-2x-horizonta">
+          <div class="oj-panel oj-margin oj-flex-item">
+            <div data-bind="ojModule: { name: 'backtest', params: {backtestModel: selectedBackTestModel}}"
+            class="oj-sm-padding-4x">
+            </div>
+          </div>
+      </div>
+  </div>
+</div>

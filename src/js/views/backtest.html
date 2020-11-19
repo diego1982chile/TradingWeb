@@ -1,0 +1,73 @@
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<STYLE TYPE="text/css">
+<!--
+  /*@import url(css/oj-redwood-min.css);*/
+-->
+</STYLE>
+<div id="circle"></div>
+<h3>BackTest-N</h3>
+<div class="oj-panel oj-flex-item"> 
+      <h5>Indicadores</h5>
+      <oj-label-value label-edge="start" label-width="30%">
+          <oj-label slot="label" for='input'>Inicio:</oj-label>
+          <oj-input-text slot="value" id="input" value="[[start]]" readonly='true'></oj-input-text>
+      </oj-label-value>
+      <oj-label-value label-edge="start" label-width="30%">
+          <oj-label slot="label" for='input'>Fin:</oj-label>
+          <oj-input-text slot="value" id="input" value="[[end]]" readonly='true'></oj-input-text>
+      </oj-label-value>
+      <oj-label-value label-edge="start" label-width="30%">
+          <oj-label slot="label" for='input'>NumberOfTrades:</oj-label>
+          <oj-input-text slot="value" id="input" value="[[numberOfTrades]]" readonly='true'></oj-input-text>
+      </oj-label-value>
+      <oj-label-value label-edge="start" label-width="30%">
+          <oj-label slot="label" for='input'>ProfitableTradesRatio:</oj-label>
+          <oj-input-text slot="value" id="input" value="[[profitableTradesRatio]]" readonly='true'></oj-input-text>
+      </oj-label-value>
+      <oj-label-value label-edge="start" label-width="30%">
+          <oj-label slot="label" for='input'>RewardRiskRatio:</oj-label>
+          <oj-input-text slot="value" id="input" value="[[rewardRiskRatio]]" readonly='true'></oj-input-text>
+      </oj-label-value>
+      <oj-label-value label-edge="start" label-width="30%">
+          <oj-label slot="label" for='input'>vsBuyAndHoldRatio:</oj-label>
+          <oj-input-text slot="value" id="input" value="[[vsBuyAndHoldRatio]]" readonly='true'></oj-input-text>
+      </oj-label-value>
+      <oj-label-value label-edge="start" label-width="30%">
+          <oj-label slot="label" for='input'>CashFlow:</oj-label>
+          <oj-input-text slot="value" id="input" value="[[cashFlow]]" readonly='true'></oj-input-text>
+      </oj-label-value>
+</div>     
+<br>
+<div class="oj-panel oj-flex-item">
+    <h5>Gráfico</h5>
+    <oj-chart id="stockChart"
+      type="stock"
+      data="[[dataProvider]]"
+      zoom-and-scroll="live"
+      overview.rendered="on"
+      x-axis="[[xAxis]]"
+      y-axis.tick-label="[[yAxisConverter]]"
+      legend.rendered="off"
+      hide-and-show-behavior="withRescale"
+      data-cursor="on"
+      on-oj-viewport-change="[[viewportChange]]"
+      style="width:100%;">
+      <template slot="itemTemplate" data-oj-as="item">
+        <oj-chart-item 
+          open="[[item.data.openPrice]]" 
+          close="[[item.data.closePrice]]" 
+          high="[[item.data.maxPrice]]"
+          low="[[item.data.minPrice]]" 
+          volume="[[item.data.volume]]"
+          group-id="[[ [item.data.group] ]]" series-id="kk">
+        </oj-chart-item>
+      </template>
+      <template slot="seriesTemplate" data-oj-as="series">
+        <oj-chart-series type="[[seriesTypeValue]]"></oj-chart-series>
+      </template>
+    </oj-chart>
+</div>
