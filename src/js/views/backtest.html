@@ -9,37 +9,17 @@ and open the template in the editor.
 -->
 </STYLE>
 <div id="circle"></div>
-<h3>BackTest-N</h3>
-<div class="oj-panel oj-flex-item"> 
-      <h5>Indicadores</h5>
-      <oj-label-value label-edge="start" label-width="30%">
-          <oj-label slot="label" for='input'>Inicio:</oj-label>
-          <oj-input-text slot="value" id="input" value="[[start]]" readonly='true'></oj-input-text>
-      </oj-label-value>
-      <oj-label-value label-edge="start" label-width="30%">
-          <oj-label slot="label" for='input'>Fin:</oj-label>
-          <oj-input-text slot="value" id="input" value="[[end]]" readonly='true'></oj-input-text>
-      </oj-label-value>
-      <oj-label-value label-edge="start" label-width="30%">
-          <oj-label slot="label" for='input'>NumberOfTrades:</oj-label>
-          <oj-input-text slot="value" id="input" value="[[numberOfTrades]]" readonly='true'></oj-input-text>
-      </oj-label-value>
-      <oj-label-value label-edge="start" label-width="30%">
-          <oj-label slot="label" for='input'>ProfitableTradesRatio:</oj-label>
-          <oj-input-text slot="value" id="input" value="[[profitableTradesRatio]]" readonly='true'></oj-input-text>
-      </oj-label-value>
-      <oj-label-value label-edge="start" label-width="30%">
-          <oj-label slot="label" for='input'>RewardRiskRatio:</oj-label>
-          <oj-input-text slot="value" id="input" value="[[rewardRiskRatio]]" readonly='true'></oj-input-text>
-      </oj-label-value>
-      <oj-label-value label-edge="start" label-width="30%">
-          <oj-label slot="label" for='input'>vsBuyAndHoldRatio:</oj-label>
-          <oj-input-text slot="value" id="input" value="[[vsBuyAndHoldRatio]]" readonly='true'></oj-input-text>
-      </oj-label-value>
-      <oj-label-value label-edge="start" label-width="30%">
-          <oj-label slot="label" for='input'>CashFlow:</oj-label>
-          <oj-input-text slot="value" id="input" value="[[cashFlow]]" readonly='true'></oj-input-text>
-      </oj-label-value>
+<!--h3>BackTest-N</h3-->
+<div class="">     
+    <oj-form-layout id="ofl1" label-edge="[[labelEdge]]" max-columns="[[columns]]">        
+        <oj-input-text slot="value" id="input" value="[[start]]" label-hint="Inicio:" disabled></oj-input-text>                            
+        <oj-input-text slot="value" id="input" value="[[end]]" label-hint="Fin:" disabled></oj-input-text>                            
+        <oj-input-text slot="value" id="input" value="[[numberOfTrades]]" label-hint="NumberOfTrades:" disabled></oj-input-text>                            
+        <oj-input-text slot="value" id="input" value="[[profitableTradesRatio]]" label-hint="ProfitableTradesRatio:" disabled></oj-input-text>                            
+        <oj-input-text slot="value" id="input" value="[[rewardRiskRatio]]" label-hint="RewardRiskRatio:" disabled></oj-input-text>                            
+        <oj-input-text slot="value" id="input" value="[[vsBuyAndHoldRatio]]" label-hint="vsBuyAndHoldRatio:" disabled></oj-input-text>                        
+        <oj-input-text slot="value" id="input" value="[[cashFlow]]" label-hint="CashFlow:" disabled></oj-input-text>        
+    </oj-form-layout>            
 </div>     
 <br>
 <div class="oj-panel oj-flex-item">

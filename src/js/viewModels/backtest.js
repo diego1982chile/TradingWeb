@@ -7,13 +7,34 @@
 /**
  * backtest module
  */
-define(['ojs/ojcore', 'knockout', 'ojs/ojarraydataprovider', 'ojs/ojconverter-number', 'ojs/ojchart'], 
-function (oj, ko, ArrayDataProvider, NumberConverter) {
+define(['ojs/ojcore','knockout',
+        'ojs/ojresponsiveutils', 
+        'ojs/ojresponsiveknockoututils',
+        'ojs/ojarraydataprovider',
+        'ojs/ojconverter-number','ojs/ojchart','ojs/ojformlayout'], 
+function (oj, ko, responsiveUtils, responsiveKnockoutUtils, ArrayDataProvider, NumberConverter) {
     /**
      * The view model for the main content view template
      */        
     function backtestContentViewModel(params) {
+        
         var self = this;
+        
+        self.isSmall = responsiveKnockoutUtils.createMediaQueryObservable(
+        responsiveUtils.getFrameworkQuery(responsiveUtils.FRAMEWORK_QUERY_KEY.SM_ONLY));
+        self.isLargeOrUp = responsiveKnockoutUtils.createMediaQueryObservable(
+        responsiveUtils.getFrameworkQuery(responsiveUtils.FRAMEWORK_QUERY_KEY.LG_UP));
+
+        // For small screens: 1 column and labels top
+        // For medium screens: 1 columns and labels inline
+        // For large screens or bigger: 2 columns and labels inline
+        self.columns = ko.computed(function () {
+          return self.isLargeOrUp() ? 2 : 1;
+        }, self);
+        self.labelEdge = ko.computed(function () {
+          return self.isSmall() ? 'top' : 'start';
+        }, self);
+        
         /* Variables */
         self.id = 1;
         
