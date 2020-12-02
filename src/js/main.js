@@ -48,6 +48,7 @@
         'corejs' : 'libs/corejs/shim',
         'chai': 'libs/chai/chai-4.2.0',
         'regenerator-runtime' : 'libs/regenerator-runtime/runtime'
+        //'jquery-loadingModal' : 'libs/jquery-loadingModal'
       }
       // endinjector
     }

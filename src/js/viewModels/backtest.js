@@ -11,7 +11,8 @@ define(['ojs/ojcore','knockout',
         'ojs/ojresponsiveutils', 
         'ojs/ojresponsiveknockoututils',
         'ojs/ojarraydataprovider',
-        'ojs/ojconverter-number','ojs/ojchart','ojs/ojformlayout'], 
+        'ojs/ojconverter-number','ojs/ojchart','ojs/ojformlayout',
+        'jquery-loadingModal/jquery.loadingModal'], 
 function (oj, ko, responsiveUtils, responsiveKnockoutUtils, ArrayDataProvider, NumberConverter) {
     /**
      * The view model for the main content view template
@@ -19,6 +20,12 @@ function (oj, ko, responsiveUtils, responsiveKnockoutUtils, ArrayDataProvider, N
     function backtestContentViewModel(params) {
         
         var self = this;
+        
+        $('body').loadingModal({
+            text: 'Cargando...',            
+        });
+        
+        $('body').loadingModal('animation', 'fadingCircle').loadingModal('backgroundColor', 'gray');
         
         self.isSmall = responsiveKnockoutUtils.createMediaQueryObservable(
         responsiveUtils.getFrameworkQuery(responsiveUtils.FRAMEWORK_QUERY_KEY.SM_ONLY));
@@ -154,7 +161,7 @@ function (oj, ko, responsiveUtils, responsiveKnockoutUtils, ArrayDataProvider, N
         self.viewportChange = function(event) {
           //alert("event.detail['xMin'] = " + event.detail['xMin'] + " event.detail['xMax'] = " + event.detail['xMax']);          
           self.updateStockChangeLabel(event.detail['xMin'], event.detail['xMax']);
-        }.bind(self);
+        }.bind(self);       
         
 
         self.backtestModel = ko.computed(function () {
@@ -162,9 +169,11 @@ function (oj, ko, responsiveUtils, responsiveKnockoutUtils, ArrayDataProvider, N
             //console.log(JSON.stringify(params));            
             if (typeof params.backtestModel() === 'undefined') {
                 return;
-            }                                        
+            }                                                                                                           
             
-            var id = params.backtestModel().get('id');             
+            var id = params.backtestModel().get('id');     
+                        
+            $('body').loadingModal('show');
 
             $.getJSON("http://dnssemantikos:8080/TradingService/api/periods/" + id).
                 then(function (backtest) {                    
@@ -185,9 +194,14 @@ function (oj, ko, responsiveUtils, responsiveKnockoutUtils, ArrayDataProvider, N
                     
                     console.log("backtest.bars.length = " + backtest.bars.length);      
                     
-                    self.updateStockChangeLabel(self.viewportMinValue(), self.currentTime());
+                    self.updateStockChangeLabel(self.viewportMinValue(), self.currentTime());                                        
 
                 });               
+                
+            // hide the loading modal
+            $('body').loadingModal('hide');
+            $('#backtest').show();
+            $('#forwardtest').hide();
                  
             return params.backtestModel();
         });

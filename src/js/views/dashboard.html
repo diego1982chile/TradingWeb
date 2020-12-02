@@ -58,7 +58,7 @@
                 class='oj-sm-12'
                 data='[[backTestListDataSource]]'
                 selection-mode='single' selection="{{selectedBackTest}}"
-                on-selection-changed="[[listSelectionChanged]]"
+                on-selection-changed="[[backtestListSelectionChanged]]"
                 selection-required='true' style="height: 320px;overflow-x: hidden;"
                 scroll-position="{{scrollPos}}" on-scroll-position-changed="[[handleScrollPositionChanged]]"
                 scroll-policy="loadMoreOnScroll" scroll-policy-options.fetch-size="100"
@@ -97,8 +97,10 @@
                     <!--oj-paging-control id="paging" data="[[forwardTestListDataSource]]" page-size="4">
                     </oj-paging-control-->
                     <oj-list-view id='listview'
-                    aria-label="listview with paging control"                               
-                    class='oj-sm-12' style="height: 113px;overflow-x: hidden;"
+                    aria-label="listview with paging control"   
+                    selection-mode='single' selection="{{selectedForwardTest}}"
+                    on-selection-changed="[[forwardtestListSelectionChanged]]"
+                    class='oj-sm-12' selection-required="[[selectionRequired]]"
                     data='[[forwardTestListDataSource]]'                    
                     item.renderer="[[oj.KnockoutTemplateUtils.getRenderer('ticket-list-template', true)]]">
                     </oj-list-view>
@@ -150,7 +152,13 @@
         </script>
         <!-- Tab Bar-->
         
-        <div class="oj-panel oj-flex-item">
+        <div class="oj-panel oj-flex-item" id="backtest" style="display:none">
+          <div data-bind="ojModule: { name: 'backtest', params: {backtestModel: selectedBackTestModel}}"
+          class="oj-sm-padding-4x">
+          </div>
+        </div>
+        
+        <div class="oj-panel oj-flex-item" id="forwardtest" style="display:none">
           <div data-bind="ojModule: { name: 'backtest', params: {backtestModel: selectedBackTestModel}}"
           class="oj-sm-padding-4x">
           </div>

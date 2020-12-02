@@ -291,6 +291,18 @@
         "path": "libs/require-css/css.min.js",
         "cdnPath": "require-css/css.min"
       }
+    },
+    
+    "jquery-loadingModal": {      
+      "cwd": "node_modules/jquery-loadingModal",
+      "debug": {
+        "src":  ["jquery.loadingModal.js","jquery.loadingModal.css"],
+        "path": "libs/jquery-loadingModal"        
+      },
+      "release": {
+        "src":  ["jquery.loadingModal.js","jquery.loadingModal.css"],
+        "path": "libs/jquery-loadingModal"
+      }
     }
 
   }

@@ -56,8 +56,9 @@ define(['knockout',
         
         self.selectedForwardTest = ko.observable();
         self.selectedForwardTestModel = ko.observable();
-        
+        self.forwardTestList = ko.observable([]);
         self.forwardTestListDataSource = ko.observable();
+        self.selectionRequired = ko.observable(false);
         
         self.backTestListDataSource = ko.computed(function () {
            /* List View Collection and Model */
@@ -70,7 +71,7 @@ define(['knockout',
                 model: backTestModelItem
             });                          
 
-            self.backTestList = ko.observable(backTestListCollection);                                                 
+            self.backTestList = ko.observable(backTestListCollection);                         
 
             //self.backTestListDataSource(new oj.CollectionTableDataSource(self.backTestList()));   
             //return new PagingDataProviderView(new CollectionDataProvider(self.backTestList()));
@@ -79,44 +80,73 @@ define(['knockout',
         
         console.log("self.backTestListDataSource() = " + JSON.stringify(self.backTestListDataSource()));
         
-        /* List selection listener */
-        
-        self.listSelectionChanged = function () {  
-            console.log("self.backTestList().get(self.selectedBackTest()) = " + self.backTestList().get(self.selectedBackTest()));
-            self.selectedBackTestModel(self.backTestList().get(self.selectedBackTest()));                      
-            //self.forwardTestListDataSource(new PagingDataProviderView(new ArrayDataProvider(self.selectedBackTestModel().get('forwardTests')),{ keyAttributes: 'id' }));
-            self.forwardTestListDataSource(new ArrayDataProvider(self.selectedBackTestModel().get('forwardTests')),{ keyAttributes: 'id' });
-            //console.log("self.selectedBackTestModel().get('forwardTests') = " + JSON.stringify(self.selectedBackTestModel().get('forwardTests')));
-            //self.selectedBackTestModel(backTestListCollection);      
+        /* List selection listener */        
+        self.backtestListSelectionChanged = function () {
+            
+            self.selectionRequired(false);
+            
+            //console.log("self.backTestList().get(self.selectedBackTest()) = " + self.backTestList().get(self.selectedBackTest()));
+            
+            self.selectedBackTestModel(self.backTestList().get(self.selectedBackTest()));                                  
+            
+            self.forwardTestList = ko.observable(self.selectedBackTestModel().get('forwardTests'));
+                        
+            if(self.forwardTestList().length > 0) {                
+                self.forwardTestListDataSource(new ArrayDataProvider(self.forwardTestList(),{ keyAttributes: 'id' }));                
+            }            
             
             // Check if the selected ticket exists within the tab data
             var match = ko.utils.arrayFirst(self.tabData(), function (item) {
               return item.id == self.selectedBackTest();
             });
 
-            if (!match) {                                
-                self.tabData.pop();
+            if (!match) { 
+                while(self.tabData().length > 0) {                    
+                    self.tabData.pop();
+                }                
                 self.tabData.push({
                   "name": self.selectedBackTest(),
                   "id": self.selectedBackTest()
                 });
             }
             //self.selectedTicketRepId(self.selectedTicketModel().get('representativeId'));
-            self.selectedTabItem(self.selectedBackTest());
-        };          
+            self.selectedTabItem(self.selectedBackTest());                        
+        };  
+        
+        /* List selection listener */        
+        self.forwardtestListSelectionChanged = function () {     
+                        
+            self.selectionRequired(true);
+            
+            // Check if the selected ticket exists within the tab data
+            var match = ko.utils.arrayFirst(self.tabData(), function (item) {
+              return item.id == self.selectedForwardTest();
+            });
+
+            if (!match) {                                
+                //self.tabData.pop();
+                if(self.tabData().length > 1) {
+                    self.tabData.pop();
+                }
+                self.tabData.push({
+                  "name": self.selectedForwardTest(),
+                  "id": self.selectedForwardTest()
+                });
+            }
+                        
+            //self.selectedTicketRepId(self.selectedTicketModel().get('representativeId'));
+            self.selectedTabItem(self.selectedForwardTest());                        
+        };  
         
         /* Tab Component */
         self.tabData = ko.observableArray([]);
         self.tabBarDataSource = new oj.ArrayTableDataSource(self.tabData, { idAttribute: 'id' });
 
-        self.deleteTab = function (id) {
-            
-            alert(id);
-            alert(self.backTestList().at(0).id);
+        self.deleteTab = function (id) {                        
             
             // Prevent the first item in the list being removed
-            if(id != self.backTestList().at(0).id){          
-            //if(self.tabData.length > 1) {
+            //if(id != self.backTestList().at(0).id){          
+            if(self.tabData.length > 1) {
 
               var hnavlist = document.getElementById('ticket-tab-bar'),
                 items = self.tabData();
