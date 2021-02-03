@@ -5,21 +5,22 @@
  */
 
 /**
- * backtest module
+ * forwardtest module
  */
 define(['ojs/ojcore','knockout',
         'ojs/ojresponsiveutils', 
         'ojs/ojresponsiveknockoututils',
         'ojs/ojarraydataprovider',
         'ojs/ojconverter-number','ojs/ojchart','ojs/ojformlayout'], 
+    
 function (oj, ko, responsiveUtils, responsiveKnockoutUtils, ArrayDataProvider, NumberConverter) {
     /**
      * The view model for the main content view template
      */        
-    function backtestContentViewModel(params) {
+    function forwardtestContentViewModel(params) {                  
         
-        var self = this;        
-        
+        var self = this;
+           
         self.isSmall = responsiveKnockoutUtils.createMediaQueryObservable(
         responsiveUtils.getFrameworkQuery(responsiveUtils.FRAMEWORK_QUERY_KEY.SM_ONLY));
         self.isLargeOrUp = responsiveKnockoutUtils.createMediaQueryObservable(
@@ -149,7 +150,6 @@ function (oj, ko, responsiveUtils, responsiveKnockoutUtils, ArrayDataProvider, N
 
             return true;
         }.bind(self);
-
         
         self.viewportChange = function(event) {
           //alert("event.detail['xMin'] = " + event.detail['xMin'] + " event.detail['xMax'] = " + event.detail['xMax']);          
@@ -157,42 +157,46 @@ function (oj, ko, responsiveUtils, responsiveKnockoutUtils, ArrayDataProvider, N
         }.bind(self);       
         
 
-        self.backtestModel = ko.computed(function () {
+        self.forwardtestModel = ko.computed(function () {
             
             //console.log(JSON.stringify(params));            
-            if (typeof params.backtestModel() === 'undefined') {
+            if (typeof params.forwardtestModel() === 'undefined') {
                 return;
-            }                                                                                                           
+            }          
             
-            var id = params.backtestModel().get('id');                                                             
+            console.log(JSON.stringify(params.forwardtestModel()));
+            
+            var id = params.forwardtestModel().id;//.get('id');     
+                                    
 
-            $.getJSON("http://dnssemantikos:8080/TradingService/api/periods/" + id).
-                then(function (backtest) {                    
-                    self.start(backtest.start);
-                    self.end(backtest.end);
-                    self.numberOfTrades(backtest.numberOfTrades);
-                    self.profitableTradesRatio(backtest.profitableTradesRatio);
-                    self.rewardRiskRatio(backtest.rewardRiskRatio);
-                    self.vsBuyAndHoldRatio(backtest.vsBuyAndHoldRatio);
-                    self.cashFlow(backtest.cashFlow);                                        
+            $.getJSON("http://dnssemantikos:8080/TradingService/api/forwardTests/" + id).
+                then(function (forwardtest) {                    
+                    self.start(forwardtest.start);
+                    self.end(forwardtest.end);
+                    self.numberOfTrades(forwardtest.numberOfTrades);
+                    self.profitableTradesRatio(forwardtest.profitableTradesRatio);
+                    self.rewardRiskRatio(forwardtest.rewardRiskRatio);
+                    self.vsBuyAndHoldRatio(forwardtest.vsBuyAndHoldRatio);
+                    self.cashFlow(forwardtest.cashFlow);                                        
                     
-                    self.twoYearData(backtest.bars);
+                    self.twoYearData(forwardtest.bars);
                     //self.dataProvider = ko.observable();
-                    self.dataProvider(new ArrayDataProvider(backtest.bars, {keyAttributes: 'id'}));   
+                    self.dataProvider(new ArrayDataProvider(forwardtest.bars, {keyAttributes: 'id'}));   
                     
-                    self.viewportMinValue(backtest.bars[backtest.bars.length-61].group);                    
-                    self.currentTime(backtest.bars[backtest.bars.length-1].group);
+                    self.viewportMinValue(forwardtest.bars[forwardtest.bars.length-61].group);                    
+                    self.currentTime(forwardtest.bars[forwardtest.bars.length-1].group);
                     
-                    console.log("backtest.bars.length = " + backtest.bars.length);      
+                    console.log("forwardtest.bars.length = " + forwardtest.bars.length);      
                     
-                    self.updateStockChangeLabel(self.viewportMinValue(), self.currentTime());                                        
+                    self.updateStockChangeLabel(self.viewportMinValue(), self.currentTime());    
                                         
-                    $('#backtest').show();
-                    $('#forwardtest').hide();
+                    $('#backtest').hide();
+                    $('#forwardtest').show();
 
-                });                                           
+                });               
+                
                  
-            return params.backtestModel();
+            return params.forwardtestModel();
         });
         
         self.xAxis = ko.computed(function() {
@@ -203,5 +207,5 @@ function (oj, ko, responsiveUtils, responsiveKnockoutUtils, ArrayDataProvider, N
                             
     }
        
-    return backtestContentViewModel;
+    return forwardtestContentViewModel;
 });

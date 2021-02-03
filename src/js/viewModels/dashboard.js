@@ -14,14 +14,20 @@ define(['knockout',
         'ojs/ojpagingcontrol',        
         'ojs/ojinputtext','ojs/ojlistview',
         'ojs/ojlabel','ojs/ojlabelvalue','ojs/ojbutton','ojs/ojselectcombobox',
-        'ojs/ojconveyorbelt'
+        'ojs/ojconveyorbelt','jquery-loadingModal/jquery.loadingModal'
         ],
         
  function(ko, CollectionDataProvider, ArrayDataProvider) {
 
     function DashboardViewModel() {        
         
-        var self = this;        
+        var self = this;       
+                  
+        $('body').loadingModal({
+            text: 'Cargando...',            
+        });        
+        
+        $('body').loadingModal('animation', 'fadingCircle').loadingModal('backgroundColor', 'gray');
 
         self.value1 = ko.observable('CH'); 
         
@@ -56,7 +62,7 @@ define(['knockout',
         
         self.selectedForwardTest = ko.observable();
         self.selectedForwardTestModel = ko.observable();
-        self.forwardTestList = ko.observable([]);
+        self.forwardTestList = ko.observable();
         self.forwardTestListDataSource = ko.observable();
         self.selectionRequired = ko.observable(false);
         
@@ -71,23 +77,19 @@ define(['knockout',
                 model: backTestModelItem
             });                          
 
-            self.backTestList = ko.observable(backTestListCollection);                         
+            self.backTestList = ko.observable(backTestListCollection);                            
 
             //self.backTestListDataSource(new oj.CollectionTableDataSource(self.backTestList()));   
             //return new PagingDataProviderView(new CollectionDataProvider(self.backTestList()));
             return new CollectionDataProvider(self.backTestList());
         });                              
-        
-        console.log("self.backTestListDataSource() = " + JSON.stringify(self.backTestListDataSource()));
-        
+                
         /* List selection listener */        
-        self.backtestListSelectionChanged = function () {
+        self.backtestListSelectionChanged = function () {                                               
             
             self.selectionRequired(false);
-            
-            //console.log("self.backTestList().get(self.selectedBackTest()) = " + self.backTestList().get(self.selectedBackTest()));
-            
-            self.selectedBackTestModel(self.backTestList().get(self.selectedBackTest()));                                  
+                        
+            self.selectedBackTestModel(self.backTestList().get(self.selectedBackTest()));                        
             
             self.forwardTestList = ko.observable(self.selectedBackTestModel().get('forwardTests'));
                         
@@ -109,19 +111,25 @@ define(['knockout',
                   "id": self.selectedBackTest()
                 });
             }
-            //self.selectedTicketRepId(self.selectedTicketModel().get('representativeId'));
+            
             self.selectedTabItem(self.selectedBackTest());                        
         };  
         
         /* List selection listener */        
         self.forwardtestListSelectionChanged = function () {     
                         
-            self.selectionRequired(true);
+            self.selectionRequired(true);                        
+                        
+            console.log("self.forwardTestList() = " + JSON.stringify(self.forwardTestList()));            
+            
+            self.selectedForwardTestModel(self.forwardTestList()[0]);                                  
+            
+            //self.selectedForwardTestModel = self.forwardTestList()[0];                                  
             
             // Check if the selected ticket exists within the tab data
-            var match = ko.utils.arrayFirst(self.tabData(), function (item) {
+            var match = ko.utils.arrayFirst(self.tabData(), function (item) {              
               return item.id == self.selectedForwardTest();
-            });
+            });                        
 
             if (!match) {                                
                 //self.tabData.pop();
@@ -133,8 +141,7 @@ define(['knockout',
                   "id": self.selectedForwardTest()
                 });
             }
-                        
-            //self.selectedTicketRepId(self.selectedTicketModel().get('representativeId'));
+                                    
             self.selectedTabItem(self.selectedForwardTest());                        
         };  
         
@@ -184,26 +191,17 @@ define(['knockout',
             //self.selectedBackTest([self.selectedTabItem()])          
         } 
         
-    }
-    
-    /*
-    Bootstrap.whenDocumentReady().then(
-        function () {
-            //ko.cleanNode(document.getElementById('form-container'));
-            alert(document.getElementById('form-container'));
-            ko.applyBindings(new DashboardViewModel(), document.getElementById('form-container'));            
-        }
-    );
-    */
-   
-    /*
-    $(
-        function() 
-        {
-            ko.applyBindings(new viewModel(), document.getElementById('listview').parentNode);
-        }
-    );
-    */    
+        $( document ).ajaxStart(function() {            
+            $('body').loadingModal('show');
+        });
+                
+        
+        $( document ).ajaxComplete(function() {            
+            $('body').loadingModal('hide');
+        });
+                
+        
+    }      
 
     /*
      * Returns an instance of the ViewModel providing one instance of the ViewModel. If needed,
